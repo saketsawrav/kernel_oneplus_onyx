@@ -1043,6 +1043,7 @@ static ssize_t store_boost(struct kobject *kobj, struct attribute *attr,
 		if (!boosted)
 			cpufreq_interactive_boost();
 	} else {
+		boostpulse_endtime = ktime_to_us(ktime_get());
 		trace_cpufreq_interactive_unboost("off");
 	}
 
@@ -1240,9 +1241,6 @@ static int cpufreq_governor_interactive(struct cpufreq_policy *policy,
 
 	switch (event) {
 	case CPUFREQ_GOV_START:
-		if (!cpu_online(policy->cpu))
-			return -EINVAL;
-
 		mutex_lock(&gov_lock);
 
 		freq_table =

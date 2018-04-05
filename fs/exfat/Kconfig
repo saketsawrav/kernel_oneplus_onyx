@@ -1,19 +1,27 @@
 config EXFAT_FS
-	tristate "exFAT filesystem support (Samsung OSRC)"
+	tristate "exFAT fs support"
+	default n
 	select NLS
+	select NLS_UTF8
 	help
-	  exFAT driver released by Samsung OSRC
+	  If you want to use the exFAT file systems, then you must say Y or M here
+	  to include exFAT support.
 
-config EXFAT_DEFAULT_CODEPAGE
-	int "Default codepage for exFAT"
+config EXFAT_VIRTUAL_XATTR
+	bool "Virtual xattr support for exFAT filesystem"
+	default y
 	depends on EXFAT_FS
-	default 437
 	help
-	  This option should be set to the codepage of your exFAT filesystems.
+	  Modification of exFAT filesystem for virtual xattr
 
-config EXFAT_DEFAULT_IOCHARSET
-	string "Default iocharset for exFAT"
-	depends on EXFAT_FS
-	default "utf8"
+config EXFAT_VIRTUAL_XATTR_SELINUX_LABEL
+	string "Default string for SELinux label"
+	depends on EXFAT_FS && EXFAT_VIRTUAL_XATTR
+	default "u:object_r:sdcard_external:s0"
 	help
-	  Set this to the default input/output character set you'd like exFAT to use.
+	  Set this to the default string for SELinux label.
+
+config EXFAT_SUPPORT_STLOG
+	bool "Enable storage log"
+	default y
+	depends on EXFAT_FS && PROC_STLOG
